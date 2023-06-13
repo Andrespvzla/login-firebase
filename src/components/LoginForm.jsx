@@ -3,9 +3,10 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 import { MdAlternateEmail, MdLockOutline } from 'react-icons/md';
-import Swal from 'sweetalert2';
 
 import { Link, useNavigate } from 'react-router-dom';
+
+import toast from 'react-hot-toast';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -14,17 +15,14 @@ export const LoginForm = () => {
   const navigate = useNavigate();
   const { googleLogin, login } = useContext(AuthContext);
 
+  const notifyError = (error) => toast.error(error);
+
   const handleLogin = async () => {
     try {
       await login(email, password);
       navigate('/');
     } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      });
+      notifyError(error.message);
     }
   };
 

@@ -2,30 +2,27 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
-import Swal from 'sweetalert2';
-
 import { MdAlternateEmail } from 'react-icons/md';
+
+import toast from 'react-hot-toast';
 
 export const RecoverPassword = () => {
   const [email, setEmail] = useState();
 
   const { recoverPassword } = useContext(AuthContext);
 
+  const notifyError = (error) => toast.error(error);
+  const notifySuccess = () =>
+    toast.success(
+      'We just send you a link to your email to reset your password'
+    );
+
   const handleForgotPassword = async () => {
-    if (!email) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Please enter your email',
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      });
-    } else {
+    try {
       await recoverPassword(email);
-      Swal.fire({
-        title: 'Check your email!',
-        text: 'We have sent you an email with instructions to recover your password',
-        icon: 'success',
-      });
+      notifySuccess();
+    } catch (error) {
+      notifyError(error.message);
     }
   };
 

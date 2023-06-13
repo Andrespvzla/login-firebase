@@ -10,6 +10,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { RecoverPassword } from './components/RecoverPassword';
 import { ResetPassword } from './components/ResetPassword';
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <AuthProvider>
@@ -28,6 +30,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
+      <Toaster position="bottom-center" />
     </AuthProvider>
   );
 }

@@ -4,12 +4,13 @@ import { AuthContext } from '../context/AuthContext';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import toast from 'react-hot-toast';
+
 import {
   MdAlternateEmail,
   MdLockOutline,
   MdAccountCircle,
 } from 'react-icons/md';
-import Swal from 'sweetalert2';
 
 export const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -17,19 +18,17 @@ export const RegisterForm = () => {
   const [passwordRegister, setPasswordRegister] = useState('');
 
   const navigate = useNavigate();
+  const notifyError = (error) => toast.error(error);
+
   const { googleLogin, register } = useContext(AuthContext);
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       await register(name, emailRegister, passwordRegister);
       navigate('/');
     } catch (error) {
-      Swal.fire({
-        title: 'Error!',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      });
+      notifyError(error.message);
     }
   };
 
@@ -56,70 +55,71 @@ export const RegisterForm = () => {
             Please fill your information to complete your registration
           </p>
           <div className="mt-8">
-            <div>
-              <label
-                htmlFor="name"
-                className="text-lg font-medium text-gray-800"
-              >
-                Name
-              </label>
-              <div className="relative flex items-center justify-end">
-                <MdAccountCircle className="w-5 h-5 absolute mr-5 text-gray-400" />
-                <input
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  type="name"
-                  placeholder="Type your name"
-                  id="name"
-                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent text-gray-800 focus:outline-indigo-300"
-                />
+            <form onSubmit={handleRegister}>
+              <div>
+                <label
+                  htmlFor="name"
+                  className="text-lg font-medium text-gray-800"
+                >
+                  Name
+                </label>
+                <div className="relative flex items-center justify-end">
+                  <MdAccountCircle className="w-5 h-5 absolute mr-5 text-gray-400" />
+                  <input
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    type="name"
+                    placeholder="Type your name"
+                    id="name"
+                    className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent text-gray-800 focus:outline-indigo-300"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mt-8">
-              <label
-                htmlFor="email"
-                className="text-lg font-medium text-gray-800"
-              >
-                Email
-              </label>
-              <div className="relative flex items-center justify-end">
-                <MdAlternateEmail className="w-5 h-5 absolute mr-5 text-gray-400" />
-                <input
-                  onChange={(e) => setEmailRegister(e.target.value)}
-                  required
-                  type="email"
-                  placeholder="Type your email"
-                  id="email"
-                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent text-gray-800 focus:outline-indigo-300"
-                />
+              <div className="mt-8">
+                <label
+                  htmlFor="email"
+                  className="text-lg font-medium text-gray-800"
+                >
+                  Email
+                </label>
+                <div className="relative flex items-center justify-end">
+                  <MdAlternateEmail className="w-5 h-5 absolute mr-5 text-gray-400" />
+                  <input
+                    onChange={(e) => setEmailRegister(e.target.value)}
+                    required
+                    type="email"
+                    placeholder="Type your email"
+                    id="email"
+                    className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent text-gray-800 focus:outline-indigo-300"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mt-8">
-              <label
-                htmlFor="password"
-                className="text-lg font-medium text-gray-800"
-              >
-                Password
-              </label>
-              <div className="relative flex items-center justify-end">
-                <MdLockOutline className="w-5 h-5 absolute mr-5 text-gray-400" />
-                <input
-                  onChange={(e) => setPasswordRegister(e.target.value)}
-                  required
-                  type="password"
-                  placeholder="Type your password"
-                  id="password"
-                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent focus:outline-indigo-300 text-gray-800"
-                />
+              <div className="mt-8">
+                <label
+                  htmlFor="password"
+                  className="text-lg font-medium text-gray-800"
+                >
+                  Password
+                </label>
+                <div className="relative flex items-center justify-end">
+                  <MdLockOutline className="w-5 h-5 absolute mr-5 text-gray-400" />
+                  <input
+                    onChange={(e) => setPasswordRegister(e.target.value)}
+                    required
+                    type="password"
+                    placeholder="Type your password"
+                    id="password"
+                    className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent focus:outline-indigo-300 text-gray-800"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mt-8 flex flex-col gap-y-4">
-              <button
-                onClick={handleRegister}
-                className="bg-indigo-500 text-white text-xl font-bold rounded-xl py-3 hover:bg-indigo-600 hover:scale-[1.01] ease-in-out active:scale-[.98] active:duration-75 transition-all"
-              >
-                Create Account
-              </button>
+              <div className="mt-8 flex flex-col gap-y-4">
+                <button className="bg-indigo-500 text-white text-xl font-bold rounded-xl py-3 hover:bg-indigo-600 hover:scale-[1.01] ease-in-out active:scale-[.98] active:duration-75 transition-all">
+                  Create Account
+                </button>
+              </div>
+            </form>
+            <div className="mt-4 flex flex-col gap-y-4">
               <button
                 onClick={handleGoogleLogin}
                 className="flex border-2 border-gray-100 py-3 rounded-xl items-center justify-center gap-2 hover:scale-[1.01] ease-in-out active:scale-[.98] active:duration-75 transition-all"

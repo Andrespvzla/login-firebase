@@ -1,8 +1,10 @@
 import { useState, useContext } from 'react';
 import { MdLockOutline } from 'react-icons/md';
-import Swal from 'sweetalert2';
+
 import { AuthContext } from '../context/AuthContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import toast from 'react-hot-toast';
 
 export const ResetPassword = () => {
   const location = useLocation();
@@ -18,30 +20,26 @@ export const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
 
+  const notifyError = (error) => toast.error(error);
+  const notifySuccess = () =>
+    toast.success('Great!! You just changed your password');
+  const navigate = useNavigate();
+
   const handleResetPassword = async () => {
     if (password) {
       if (password === password2) {
-        await resetPassword(oobCode, password);
-        Swal.fire({
-          title: 'Great!!!',
-          text: 'You just changed your password',
-          icon: 'success',
-        });
+        try {
+          await resetPassword(oobCode, password);
+          notifySuccess();
+          navigate('/');
+        } catch (error) {
+          notifyError(error.message);
+        }
       } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Passwords does not match',
-          icon: 'error',
-          confirmButtonText: 'Try again',
-        });
+        notifyError('Your new password does not match');
       }
     } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Type your password',
-        icon: 'error',
-        confirmButtonText: 'Try again',
-      });
+      notifyError('Please type your new password');
     }
   };
 
